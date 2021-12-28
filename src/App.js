@@ -1,23 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import { useRef, useState } from "react";
+import "./App.css";
 
 function App() {
+  const [tasks, setTasks] = useState([]);
+  const inputRef = useRef(null);
+  const handleClick = () => {
+    const text = inputRef.current.value;
+    setTasks([...tasks, text]);
+    inputRef.current.value = "";
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleClick();
+    }
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="content-wrapper">
+        <header>My Todo list</header>
+        <div>
+          <input type="text" ref={inputRef} onKeyDown={handleKeyDown} />
+          <button onClick={handleClick}>Add Task</button>
+        </div>
+        <section className="task-container">
+          {tasks &&
+            tasks.map((taskText, index) => (
+              <Task key={index} taskText={taskText} />
+            ))}
+        </section>
+      </div>
+    </div>
+  );
+}
+
+function Task({ taskText }) {
+  return (
+    <div className="task">
+      <span className="task-text">{taskText}</span>
     </div>
   );
 }
